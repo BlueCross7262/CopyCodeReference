@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
+  <Include href="VSGlobals.vsct"/>
+
+  <Commands package="CopyCodeReference">
+    <Groups>
+      <Group guid="CopyCodeReference" id="CopyCodeReferenceGroup" priority="0x0600">
+        <Parent guid="VSMainMenu" id="Edit"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="CopyCodeReference" id="CopyCodeReferenceCommand" priority="0x0100" type="Button">
+        <Parent guid="CopyCodeReference" id="CopyCodeReferenceGroup" />
+        <Icon guid="ImageCatalogGuid" id="Copy" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <Strings>
+          <ButtonText>Copy Code Reference</ButtonText>
+          <LocCanonicalName>.Edit.CopyCodeReference</LocCanonicalName>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="CopyCodeReference" value="{cf0867e8-3f40-427f-9f65-d4da570b0145}">
+      <IDSymbol name="CopyCodeReferenceGroup" value="0x0001" />
+      <IDSymbol name="CopyCodeReferenceCommand" value="0x0100" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
