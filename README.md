@@ -25,30 +25,22 @@ Visual Studio 2022 확장이다. 코드 편집기에서 선택한 코드를 절�
 
 ## 출력 예
 
-여러 줄을 선택한 경우.
+한 줄만 선택한 경우. 경로와 줄 번호 뒤에 공백 한 칸을 두고 선택한 텍스트가 그대로 이어진다.
+
+```text
+D:\Project\SampleApp\ViewModels\MainViewModel.cs:42 var data = await repository.LoadAsync();
+```
+
+여러 줄을 선택한 경우. 위치만 복사하고 코드는 넣지 않는다.
 
 ```text
 D:\Project\SampleApp\ViewModels\MainViewModel.cs:42-46
-
-private async Task LoadAsync()
-{
-    var data = await repository.LoadAsync();
-    Items.AddRange(data);
-}
 ```
-
-한 줄만 선택한 경우.
-
-```text
-D:\Project\SampleApp\ViewModels\MainViewModel.cs:42
-
-var data = await repository.LoadAsync();
-```
-
-경로 다음 줄은 항상 빈 줄 하나이고, 그 뒤부터 선택한 텍스트가 그대로 이어진다.
 
 ## 동작 규칙
 
+- 선택한 코드 텍스트는 한 줄 선택일 때만 포함한다. 여러 줄을 선택하면 `경로:시작-끝` 한 줄만 복사한다.
+- 한 줄 선택의 구분자는 공백 정확히 한 칸이다.
 - 출력 경로는 항상 절대 경로다. 솔루션 상대 경로 변환은 하지 않는다.
 - 줄 번호는 1-based 다.
 - 선택 영역의 끝이 다음 줄 첫 위치에 있어도 그 줄은 범위에 포함하지 않는다. 1~3 줄을 선택하면 `:1-3` 이지 `:1-4` 가 아니다.
@@ -89,7 +81,7 @@ Experimental Instance 는 평소 쓰는 Visual Studio 설정과 분리된 별도
 
 `tests\CopyCodeReference.Tests` 프로젝트가 Visual Studio SDK 에 의존하지 않는 순수 로직을 검증한다.
 
-- `CodeReferenceBuilder` 의 출력 형식. 단일 줄, 여러 줄, 빈 문자열, 들여쓰기 유지, 탭 유지, CRLF 유지, 한글 경로, Unicode 텍스트.
+- `CodeReferenceBuilder` 의 출력 형식. 단일 줄 공백 구분자, 여러 줄 위치 전용, 빈 문자열, 들여쓰기 유지, 탭 유지, CRLF 유지, 한글 경로, Unicode 텍스트.
 - `LineRangeCalculator` 의 줄 범위 계산. exclusive end 처리, 파일 마지막 줄, 끝 개행, 경계 클램프.
 
 ```powershell

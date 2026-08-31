@@ -6,22 +6,20 @@ namespace CopyCodeReference.Tests
     [TestClass]
     public class CodeReferenceBuilderTests
     {
-        private static readonly string NewLine = Environment.NewLine;
-
         [TestMethod]
-        public void Build_SingleLine_UsesSingleLineNumberFormat()
+        public void Build_SingleLine_JoinsLocationAndTextWithSingleSpace()
         {
             string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;");
 
-            Assert.AreEqual(@"D:\Project\Test.cs:12" + NewLine + NewLine + "var a = 1;", actual);
+            Assert.AreEqual(@"D:\Project\Test.cs:12 var a = 1;", actual);
         }
 
         [TestMethod]
-        public void Build_MultipleLines_UsesLineRangeFormat()
+        public void Build_MultipleLines_UsesLineRangeWithoutSelectedText()
         {
             string selectedText =
-                "private async Task LoadAsync()" + NewLine +
-                "{" + NewLine +
+                "private async Task LoadAsync()" + Environment.NewLine +
+                "{" + Environment.NewLine +
                 "}";
 
             string actual = CodeReferenceBuilder.Build(
@@ -30,17 +28,26 @@ namespace CopyCodeReference.Tests
                 46,
                 selectedText);
 
-            Assert.AreEqual(
-                @"D:\Project\SampleApp\ViewModels\MainViewModel.cs:42-46" + NewLine + NewLine + selectedText,
-                actual);
+            Assert.AreEqual(@"D:\Project\SampleApp\ViewModels\MainViewModel.cs:42-46", actual);
         }
 
         [TestMethod]
-        public void Build_EmptySelectedText_KeepsLocationAndBlankLine()
+        public void Build_MultipleLines_OmitsSeparatorAndCode()
+        {
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 10, 11, "first\r\nsecond");
+
+            Assert.IsFalse(actual.Contains("first"));
+            Assert.IsFalse(actual.Contains("second"));
+            Assert.IsFalse(actual.Contains("\r"));
+            Assert.IsFalse(actual.Contains("\n"));
+        }
+
+        [TestMethod]
+        public void Build_EmptySelectedText_KeepsLocationAndSeparator()
         {
             string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 7, 7, string.Empty);
 
-            Assert.AreEqual(@"D:\Project\Test.cs:7" + NewLine + NewLine, actual);
+            Assert.AreEqual(@"D:\Project\Test.cs:7 ", actual);
         }
 
         [TestMethod]
@@ -50,8 +57,8 @@ namespace CopyCodeReference.Tests
 
             string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 3, 3, selectedText);
 
-            Assert.IsTrue(actual.EndsWith(selectedText, StringComparison.Ordinal));
-            Assert.IsTrue(actual.Contains("        var indented = true;"));
+            Assert.AreEqual(@"D:\Project\Test.cs:3 " + selectedText, actual);
+            Assert.IsTrue(actual.EndsWith("        var indented = true;", StringComparison.Ordinal));
         }
 
         [TestMethod]
@@ -61,19 +68,19 @@ namespace CopyCodeReference.Tests
 
             string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 5, 5, selectedText);
 
-            Assert.IsTrue(actual.EndsWith(selectedText, StringComparison.Ordinal));
+            Assert.AreEqual(@"D:\Project\Test.cs:5 " + selectedText, actual);
             Assert.IsTrue(actual.Contains("\t\t"));
         }
 
         [TestMethod]
-        public void Build_CrLfText_PreservesCarriageReturnLineFeed()
+        public void Build_SingleLineEndingWithCrLf_PreservesCarriageReturnLineFeed()
         {
-            string selectedText = "first\r\nsecond\r\n";
+            string selectedText = "var line = 1;\r\n";
 
-            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 10, 11, selectedText);
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 10, 10, selectedText);
 
-            Assert.IsTrue(actual.EndsWith(selectedText, StringComparison.Ordinal));
-            Assert.IsTrue(actual.Contains("first\r\nsecond\r\n"));
+            Assert.AreEqual(@"D:\Project\Test.cs:10 " + selectedText, actual);
+            Assert.IsTrue(actual.EndsWith("var line = 1;\r\n", StringComparison.Ordinal));
         }
 
         [TestMethod]
@@ -83,6 +90,7 @@ namespace CopyCodeReference.Tests
 
             string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 8, 8, selectedText);
 
+            Assert.AreEqual(@"D:\Project\Test.cs:8 " + selectedText, actual);
             Assert.IsTrue(actual.EndsWith("   var padded = 1;   ", StringComparison.Ordinal));
         }
 
@@ -91,9 +99,8 @@ namespace CopyCodeReference.Tests
         {
             string filePath = @"D:\프로젝트\소스\메인화면.cs";
 
-            string actual = CodeReferenceBuilder.Build(filePath, 1, 2, "code");
-
-            Assert.AreEqual(filePath + ":1-2" + NewLine + NewLine + "code", actual);
+            Assert.AreEqual(filePath + ":1 code", CodeReferenceBuilder.Build(filePath, 1, 1, "code"));
+            Assert.AreEqual(filePath + ":1-2", CodeReferenceBuilder.Build(filePath, 1, 2, "code"));
         }
 
         [TestMethod]
@@ -103,16 +110,17 @@ namespace CopyCodeReference.Tests
 
             string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 21, 21, selectedText);
 
-            Assert.AreEqual(@"D:\Project\Test.cs:21" + NewLine + NewLine + selectedText, actual);
+            Assert.AreEqual(@"D:\Project\Test.cs:21 " + selectedText, actual);
         }
 
         [TestMethod]
-        public void Build_SeparatorBetweenLocationAndCode_IsExactlyOneBlankLine()
+        public void Build_SingleLine_SeparatorIsExactlyOneSpace()
         {
             string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 1, "x");
 
-            Assert.AreEqual(@"D:\Project\Test.cs:1" + NewLine + NewLine + "x", actual);
-            Assert.IsFalse(actual.Contains(NewLine + NewLine + NewLine));
+            Assert.AreEqual(@"D:\Project\Test.cs:1 x", actual);
+            Assert.IsFalse(actual.Contains("  "));
+            Assert.IsFalse(actual.Contains(Environment.NewLine));
         }
     }
 }
