@@ -1,6 +1,6 @@
 # Copy Code Reference
 
-Visual Studio 2022 확장이다. 코드 편집기에서 선택한 코드를 절대 파일 경로와 줄 번호와 함께 클립보드에 복사한다.
+Visual Studio 2022 확장이다. 코드 편집기에서 선택한 코드를 파일 경로와 줄 번호와 함께 클립보드에 복사한다. 절대 경로와 솔루션 상대 경로 중에서 고를 수 있다.
 
 코드 리뷰, 이슈 작성, AI 코딩 에이전트에 코드 조각을 전달할 때 "어느 파일 몇 번째 줄인지"를 매번 손으로 적지 않아도 된다.
 
@@ -18,10 +18,26 @@ Visual Studio 2022 확장이다. 코드 편집기에서 선택한 코드를 절�
 ## 사용 방법
 
 - 첫째, Visual Studio 편집기에서 코드를 선택한다.
-- 둘째, `Edit` 메뉴에서 `Copy Code Reference` 를 실행한다.
+- 둘째, 아래 둘 중 하나를 실행한다.
+  - 편집기에서 우클릭 → `Copy Code Reference` 또는 `Copy Code Reference (Relative Path)`
+  - `Edit` 메뉴 → 같은 두 항목
 - 셋째, 원하는 곳에 붙여넣는다.
 
-기본 단축키는 지정하지 않는다. 필요하면 `Tools` → `Options` → `Environment` → `Keyboard` 에서 `Edit.CopyCodeReference` 를 검색해 직접 할당한다.
+## 명령 두 개
+
+| 명령 | 경로 | Keyboard 검색 이름 |
+| --- | --- | --- |
+| `Copy Code Reference` | 절대 경로 | `Edit.CopyCodeReference` |
+| `Copy Code Reference (Relative Path)` | 솔루션 상대 경로 | `Edit.CopyCodeReferenceRelative` |
+
+상대 경로의 기준은 솔루션 파일이 있는 디렉터리다. 아래 경우에는 절대 경로로 자동 대체한다.
+
+- 솔루션이 열려 있지 않다.
+- 파일이 솔루션 디렉터리 밖에 있다. 드라이브가 다른 경우도 포함한다.
+
+`..\..\` 형태로 거슬러 올라가는 경로는 만들지 않는다. 그런 경로는 짧지도 않고 읽기도 어렵다.
+
+기본 단축키는 지정하지 않는다. 필요하면 `Tools` → `Options` → `Environment` → `Keyboard` 에서 위 표의 이름을 검색해 직접 할당한다.
 
 ## 출력 예
 
@@ -37,11 +53,17 @@ D:\Project\SampleApp\ViewModels\MainViewModel.cs:42 var data = await repository.
 D:\Project\SampleApp\ViewModels\MainViewModel.cs:42-46
 ```
 
+`Copy Code Reference (Relative Path)` 로 실행한 경우. 솔루션 디렉터리가 `D:\Project\SampleApp` 일 때다.
+
+```text
+ViewModels\MainViewModel.cs:42 var data = await repository.LoadAsync();
+```
+
 ## 동작 규칙
 
 - 선택한 코드 텍스트는 한 줄 선택일 때만 포함한다. 여러 줄을 선택하면 `경로:시작-끝` 한 줄만 복사한다.
 - 한 줄 선택의 구분자는 공백 정확히 한 칸이다.
-- 출력 경로는 항상 절대 경로다. 솔루션 상대 경로 변환은 하지 않는다.
+- 경로 형태는 실행한 명령이 정한다. 절대 경로 명령과 솔루션 상대 경로 명령이 따로 있다.
 - 줄 번호는 1-based 다.
 - 선택 영역의 끝이 다음 줄 첫 위치에 있어도 그 줄은 범위에 포함하지 않는다. 1~3 줄을 선택하면 `:1-3` 이지 `:1-4` 가 아니다.
 - 선택한 텍스트에는 어떤 가공도 하지 않는다. 들여쓰기, 탭, CRLF, 줄 끝 공백을 그대로 유지한다.
@@ -81,6 +103,7 @@ Experimental Instance 는 평소 쓰는 Visual Studio 설정과 분리된 별도
 
 `tests\CopyCodeReference.Tests` 프로젝트가 Visual Studio SDK 에 의존하지 않는 순수 로직을 검증한다.
 
+- `RelativePathResolver` 의 솔루션 상대 경로 변환. 하위 폴더, 접두사 겹침 오탐, 다른 드라이브, UNC, 한글 경로, 대소문자 차이.
 - `CodeReferenceBuilder` 의 출력 형식. 단일 줄 공백 구분자, 여러 줄 위치 전용, 빈 문자열, 들여쓰기 유지, 탭 유지, CRLF 유지, 한글 경로, Unicode 텍스트.
 - `LineRangeCalculator` 의 줄 범위 계산. exclusive end 처리, 파일 마지막 줄, 끝 개행, 경계 클램프.
 
@@ -97,8 +120,6 @@ dotnet test tests\CopyCodeReference.Tests\CopyCodeReference.Tests.csproj
 
 ## 향후 기능
 
-- 솔루션 상대 경로 지원
-- 편집기 우클릭 메뉴
 - Markdown 코드 펜스 출력 형식
 - 선택이 없을 때 현재 줄 복사
 - 사용자 출력 형식 설정

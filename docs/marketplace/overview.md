@@ -1,12 +1,14 @@
 # Copy Code Reference
 
-Copy selected code from the Visual Studio editor together with its absolute file path and line numbers.
+Copy selected code from the Visual Studio editor together with its file path and line numbers. Choose between the absolute path and the solution-relative path.
 
 Useful when you paste a snippet into a code review, an issue, a chat message, or a prompt for an AI coding agent and you want the reader to know exactly where the code lives.
 
 ## Features
 
-- Copies the absolute file path and the line number of the current selection
+- Copies the file path and the line number of the current selection
+- Offers two commands, one for the absolute path and one for the solution-relative path
+- Available from the editor right-click menu and from the Edit menu
 - Appends the selected text for single-line selections
 - Copies the line range only for multi-line selections
 - Preserves the selected text exactly, including indentation, tabs, CRLF and trailing whitespace
@@ -34,10 +36,10 @@ A selection that ends at the first position of the following line does not inclu
 ## Usage
 
 - Select code in the Visual Studio editor.
-- Run `Edit` then `Copy Code Reference`.
+- Right-click in the editor and pick `Copy Code Reference` or `Copy Code Reference (Relative Path)`. The same two entries are also under the `Edit` menu.
 - Paste the generated reference anywhere.
 
-No keyboard shortcut is assigned by default. Assign one under `Tools` then `Options` then `Environment` then `Keyboard` by searching for `Edit.CopyCodeReference`.
+No keyboard shortcut is assigned by default. Assign one under `Tools` then `Options` then `Environment` then `Keyboard` by searching for `Edit.CopyCodeReference` or `Edit.CopyCodeReferenceRelative`.
 
 ## When the command does nothing
 
@@ -62,7 +64,7 @@ Copy Code Reference does not collect telemetry and does not transmit source code
 - Box and column selections are not specially handled. They do not crash, but the copied range is derived from the equivalent stream selection.
 - Multi-caret selections use the first stream selection only.
 - The output format is fixed and has no options page.
-- Paths are always absolute. Solution-relative paths are planned for a later version.
+- The relative path is resolved against the directory that holds the solution file. When no solution is open, or when the file sits outside that directory, the absolute path is used instead.
 
 ## Source code
 

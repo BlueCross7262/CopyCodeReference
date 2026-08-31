@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.1
+
+### Added
+
+- Editor right-click context menu entries for both commands
+- `Copy Code Reference (Relative Path)` command that emits a solution-relative path
+
+### Changed
+
+- The original command keeps emitting an absolute path and is unchanged
+
 ## 0.1.0
 
 ### Added
