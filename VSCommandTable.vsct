@@ -11,9 +11,6 @@
       <Group guid="CopyCodeReference" id="CopyCodeReferenceGroup" priority="0x0600">
         <Parent guid="VSMainMenu" id="Edit"/>
       </Group>
-      <Group guid="CopyCodeReference" id="CopyCodeReferenceContextGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
-      </Group>
     </Groups>
 
     <Buttons>
@@ -40,18 +37,17 @@
   </Commands>
 
   <CommandPlacements>
-    <CommandPlacement guid="CopyCodeReference" id="CopyCodeReferenceCommand" priority="0x0100">
-      <Parent guid="CopyCodeReference" id="CopyCodeReferenceContextGroup" />
+    <CommandPlacement guid="CopyCodeReference" id="CopyCodeReferenceCommand" priority="0x0800">
+      <Parent guid="guidSHLMainMenu" id="IDG_VS_CODEWIN_TEXTEDIT" />
     </CommandPlacement>
-    <CommandPlacement guid="CopyCodeReference" id="CopyCodeReferenceRelativeCommand" priority="0x0200">
-      <Parent guid="CopyCodeReference" id="CopyCodeReferenceContextGroup" />
+    <CommandPlacement guid="CopyCodeReference" id="CopyCodeReferenceRelativeCommand" priority="0x0810">
+      <Parent guid="guidSHLMainMenu" id="IDG_VS_CODEWIN_TEXTEDIT" />
     </CommandPlacement>
   </CommandPlacements>
 
   <Symbols>
     <GuidSymbol name="CopyCodeReference" value="{cf0867e8-3f40-427f-9f65-d4da570b0145}">
       <IDSymbol name="CopyCodeReferenceGroup" value="0x0001" />
-      <IDSymbol name="CopyCodeReferenceContextGroup" value="0x0002" />
       <IDSymbol name="CopyCodeReferenceCommand" value="0x0100" />
       <IDSymbol name="CopyCodeReferenceRelativeCommand" value="0x0200" />
     </GuidSymbol>
