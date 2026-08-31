@@ -11,6 +11,8 @@ namespace CopyCodeReference
     internal sealed partial class PackageIds
     {
         public const int CopyCodeReferenceGroup = 0x0001;
+        public const int CopyCodeReferenceContextGroup = 0x0002;
         public const int CopyCodeReferenceCommand = 0x0100;
+        public const int CopyCodeReferenceRelativeCommand = 0x0200;
     }
 }

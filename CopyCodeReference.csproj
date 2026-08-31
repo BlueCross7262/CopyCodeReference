@@ -47,8 +47,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\CopyCodeReferenceCommand.cs" />
+    <Compile Include="Commands\CopyCodeReferenceRelativeCommand.cs" />
+    <Compile Include="Commands\CopyCodeReferenceExecutor.cs" />
     <Compile Include="Services\CodeReferenceBuilder.cs" />
     <Compile Include="Services\LineRangeCalculator.cs" />
+    <Compile Include="Services\RelativePathResolver.cs" />
     <Compile Include="CopyCodeReferencePackage.cs" />
     <Compile Include="source.extension.cs">
       <AutoGen>True</AutoGen>
