@@ -8,7 +8,7 @@ Visual Studio Marketplace 등록 화면에 그대로 붙여 넣을 값과, 사�
 | --- | --- |
 | Internal Name | `CopyCodeReference` |
 | Display Name | `Copy Code Reference` |
-| Version | `0.1.1` |
+| Version | `0.1.2` |
 | VSIX ID | `CopyCodeReference.8ac855e5-611b-4f49-b75f-8519d132f8b6` |
 | Publisher | `cy.ryu` |
 | Type | Tools |

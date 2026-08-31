@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2
+
+### Fixed
+
+- The context menu entries now appear in every text editor that shares the standard Cut, Copy and Paste group, including the XAML text editor. Version 0.1.1 anchored them to a private group under the code window menu, which only the C# editor showed.
+
 ## 0.1.1
 
 ### Added
