@@ -4,9 +4,11 @@
     <Identity Id="CopyCodeReference.8ac855e5-611b-4f49-b75f-8519d132f8b6" Version="0.1.0" Language="en-US" Publisher="cy.ryu" />
     <DisplayName>Copy Code Reference</DisplayName>
     <Description xml:space="preserve">Copy selected Visual Studio code with its file path and line numbers.</Description>
+    <MoreInfo>https://github.com/BlueCross7262/CopyCodeReference</MoreInfo>
+    <License>LICENSE</License>
     <Icon>Resources\Icon.png</Icon>
     <PreviewImage>Resources\Icon.png</PreviewImage>
-    <Tags>copy, clipboard, editor, selection, file path, line number, reference</Tags>
+    <Tags>code, copy, reference, clipboard, selection, line number, file path, developer tools, visual studio</Tags>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">

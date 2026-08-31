@@ -8,6 +8,6 @@ namespace CopyCodeReference
         public const string Language = "en-US";
         public const string Version = "0.1.0";
         public const string Author = "cy.ryu";
-        public const string Tags = "copy, clipboard, editor, selection, file path, line number, reference";
+        public const string Tags = "code, copy, reference, clipboard, selection, line number, file path, developer tools, visual studio";
     }
 }

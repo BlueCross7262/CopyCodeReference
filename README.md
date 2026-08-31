@@ -105,3 +105,11 @@ dotnet test tests\CopyCodeReference.Tests\CopyCodeReference.Tests.csproj
 - Box selection 전용 처리
 - Git 저장소 기준 상대 경로
 - GitHub permalink 생성
+
+## 개인정보
+
+텔레메트리를 수집하지 않고 소스 코드를 외부로 전송하지 않는다. 네트워크 통신, 계정 로그인, 외부 API 호출이 없으며 Windows 클립보드 밖에는 아무것도 쓰지 않는다.
+
+## 라이선스
+
+MIT License. `LICENSE` 파일 참고.
