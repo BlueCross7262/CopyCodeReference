@@ -10,6 +10,7 @@ namespace CopyCodeReference
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration(Vsix.Name, Vsix.Description, Vsix.Version)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideOptionPage(typeof(GeneralOptionsPage), Vsix.Name, "General", 0, 0, true, SupportsProfiles = true)]
     [Guid(PackageGuids.CopyCodeReferenceString)]
     public sealed class CopyCodeReferencePackage : ToolkitPackage
     {

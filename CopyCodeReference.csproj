@@ -49,7 +49,11 @@
     <Compile Include="Commands\CopyCodeReferenceCommand.cs" />
     <Compile Include="Commands\CopyCodeReferenceRelativeCommand.cs" />
     <Compile Include="Commands\CopyCodeReferenceExecutor.cs" />
+    <Compile Include="Options\General.cs" />
+    <Compile Include="Options\GeneralOptionsControl.cs" />
+    <Compile Include="Options\GeneralOptionsPage.cs" />
     <Compile Include="Services\CodeReferenceBuilder.cs" />
+    <Compile Include="Services\CodeReferenceFormat.cs" />
     <Compile Include="Services\LineRangeCalculator.cs" />
     <Compile Include="Services\RelativePathResolver.cs" />
     <Compile Include="CopyCodeReferencePackage.cs" />
@@ -91,6 +95,8 @@
     <Reference Include="System.Design" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

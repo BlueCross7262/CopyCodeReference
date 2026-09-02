@@ -9,6 +9,7 @@ Useful when you paste a snippet into a code review, an issue, a chat message, or
 - Copies the file path and the line number of the current selection
 - Offers two commands, one for the absolute path and one for the solution-relative path
 - Available from the editor right-click menu and from the Edit menu
+- Lets you pick the location format on an options page: `Foo.cs:12`, `Foo.cs(12)` or `Foo.cs#L12`
 - Appends the selected text for single-line selections
 - Copies the line range only for multi-line selections
 - Preserves the selected text exactly, including indentation, tabs, CRLF and trailing whitespace
@@ -41,6 +42,18 @@ A selection that ends at the first position of the following line does not inclu
 
 No keyboard shortcut is assigned by default. Assign one under `Tools` then `Options` then `Environment` then `Keyboard` by searching for `Edit.CopyCodeReference` or `Edit.CopyCodeReferenceRelative`.
 
+## Options
+
+Open `Tools` then `Options` then `Copy Code Reference` then `General` and pick the location format with a radio button. Both commands follow the same setting.
+
+| Format | Single line | Several lines |
+| --- | --- | --- |
+| Colon (default) | `Foo.cs:12` | `Foo.cs:12-15` |
+| Parentheses | `Foo.cs(12)` | `Foo.cs(12-15)` |
+| GitHub | `Foo.cs#L12` | `Foo.cs#L12-L15` |
+
+The selected text is still appended after a single space for single-line selections, whatever the format. The setting is stored in the Visual Studio settings store and travels with settings import and export.
+
 ## When the command does nothing
 
 The command exits quietly and leaves the clipboard unchanged in these cases:
@@ -63,7 +76,7 @@ Copy Code Reference does not collect telemetry and does not transmit source code
 
 - Box and column selections are not specially handled. They do not crash, but the copied range is derived from the equivalent stream selection.
 - Multi-caret selections use the first stream selection only.
-- The output format is fixed and has no options page.
+- The location format is limited to the three choices on the options page. Free-form format strings are not supported.
 - The relative path is resolved against the directory that holds the solution file. When no solution is open, or when the file sits outside that directory, the absolute path is used instead.
 
 ## Source code

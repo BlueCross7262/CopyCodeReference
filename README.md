@@ -39,6 +39,18 @@ Visual Studio 2022 확장이다. 코드 편집기에서 선택한 코드를 파�
 
 기본 단축키는 지정하지 않는다. 필요하면 `Tools` → `Options` → `Environment` → `Keyboard` 에서 위 표의 이름을 검색해 직접 할당한다.
 
+## 옵션 설정
+
+`Tools` → `Options` → `Copy Code Reference` → `General` 에서 위치 표기 서식을 라디오 버튼으로 고른다. 두 명령 모두 이 설정을 따른다.
+
+| 서식 | 한 줄 선택 | 여러 줄 선택 |
+| --- | --- | --- |
+| Colon (기본값) | `Foo.cs:12` | `Foo.cs:12-15` |
+| Parentheses | `Foo.cs(12)` | `Foo.cs(12-15)` |
+| GitHub | `Foo.cs#L12` | `Foo.cs#L12-L15` |
+
+한 줄 선택일 때 위치 뒤에 공백 한 칸과 선택한 텍스트가 붙는 규칙은 서식과 무관하게 같다. 설정은 Visual Studio 설정 저장소에 보관되고 설정 가져오기·내보내기에 포함된다.
+
 ## 출력 예
 
 한 줄만 선택한 경우. 경로와 줄 번호 뒤에 공백 한 칸을 두고 선택한 텍스트가 그대로 이어진다.
@@ -64,6 +76,7 @@ ViewModels\MainViewModel.cs:42 var data = await repository.LoadAsync();
 - 선택한 코드 텍스트는 한 줄 선택일 때만 포함한다. 여러 줄을 선택하면 `경로:시작-끝` 한 줄만 복사한다.
 - 한 줄 선택의 구분자는 공백 정확히 한 칸이다.
 - 경로 형태는 실행한 명령이 정한다. 절대 경로 명령과 솔루션 상대 경로 명령이 따로 있다.
+- 줄 번호 표기 서식은 옵션 페이지의 선택을 따른다. 기본값은 `경로:줄번호` 다.
 - 줄 번호는 1-based 다.
 - 선택 영역의 끝이 다음 줄 첫 위치에 있어도 그 줄은 범위에 포함하지 않는다. 1~3 줄을 선택하면 `:1-3` 이지 `:1-4` 가 아니다.
 - 선택한 텍스트에는 어떤 가공도 하지 않는다. 들여쓰기, 탭, CRLF, 줄 끝 공백을 그대로 유지한다.
@@ -104,7 +117,7 @@ Experimental Instance 는 평소 쓰는 Visual Studio 설정과 분리된 별도
 `tests\CopyCodeReference.Tests` 프로젝트가 Visual Studio SDK 에 의존하지 않는 순수 로직을 검증한다.
 
 - `RelativePathResolver` 의 솔루션 상대 경로 변환. 하위 폴더, 접두사 겹침 오탐, 다른 드라이브, UNC, 한글 경로, 대소문자 차이.
-- `CodeReferenceBuilder` 의 출력 형식. 단일 줄 공백 구분자, 여러 줄 위치 전용, 빈 문자열, 들여쓰기 유지, 탭 유지, CRLF 유지, 한글 경로, Unicode 텍스트.
+- `CodeReferenceBuilder` 의 출력 형식. 단일 줄 공백 구분자, 여러 줄 위치 전용, 빈 문자열, 들여쓰기 유지, 탭 유지, CRLF 유지, 한글 경로, Unicode 텍스트, Colon·Parentheses·GitHub 서식별 단일 줄과 범위 출력, 정의되지 않은 서식 값 예외.
 - `LineRangeCalculator` 의 줄 범위 계산. exclusive end 처리, 파일 마지막 줄, 끝 개행, 경계 클램프.
 
 ```powershell
@@ -115,17 +128,17 @@ dotnet test tests\CopyCodeReference.Tests\CopyCodeReference.Tests.csproj
 
 - Box / Column selection 은 공식 지원 범위가 아니다. 충돌하지는 않지만 stream selection 으로 환산한 범위를 복사한다.
 - Multi-caret 은 첫 stream selection 만 대상으로 한다.
-- 출력 형식은 고정이다. 설정 화면이 없다.
+- 출력 서식은 옵션 페이지가 제공하는 세 가지 중에서만 고를 수 있다. 자유 서식 문자열은 지원하지 않는다.
 - ARM64 는 v0.1 공식 지원 범위가 아니다.
 
 ## 향후 기능
 
 - Markdown 코드 펜스 출력 형식
 - 선택이 없을 때 현재 줄 복사
-- 사용자 출력 형식 설정
+- 사용자 정의 서식 문자열
 - Box selection 전용 처리
 - Git 저장소 기준 상대 경로
-- GitHub permalink 생성
+- GitHub permalink 생성 (저장소 URL 과 커밋 해시 포함)
 
 ## 개인정보
 

@@ -61,11 +61,14 @@ namespace CopyCodeReference
                     ? await ResolveSolutionRelativePathAsync(filePath)
                     : filePath;
 
+                General options = await General.GetLiveInstanceAsync();
+
                 string reference = CodeReferenceBuilder.Build(
                     displayPath,
                     range.StartLine,
                     range.EndLine,
-                    selectedText);
+                    selectedText,
+                    options.Format);
 
                 if (await TrySetClipboardTextAsync(reference))
                 {

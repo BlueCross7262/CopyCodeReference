@@ -122,5 +122,70 @@ namespace CopyCodeReference.Tests
             Assert.IsFalse(actual.Contains("  "));
             Assert.IsFalse(actual.Contains(Environment.NewLine));
         }
+
+        [TestMethod]
+        public void Build_DefaultOverload_UsesColonFormat()
+        {
+            string expected = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 15, "ignored", CodeReferenceFormat.Colon);
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 15, "ignored");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Build_ColonFormat_SingleLine_UsesColonAndAppendsText()
+        {
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;", CodeReferenceFormat.Colon);
+
+            Assert.AreEqual(@"D:\Project\Test.cs:12 var a = 1;", actual);
+        }
+
+        [TestMethod]
+        public void Build_ColonFormat_MultipleLines_UsesColonAndHyphenRange()
+        {
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 15, "ignored", CodeReferenceFormat.Colon);
+
+            Assert.AreEqual(@"D:\Project\Test.cs:12-15", actual);
+        }
+
+        [TestMethod]
+        public void Build_ParenthesesFormat_SingleLine_WrapsLineAndAppendsText()
+        {
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;", CodeReferenceFormat.Parentheses);
+
+            Assert.AreEqual(@"D:\Project\Test.cs(12) var a = 1;", actual);
+        }
+
+        [TestMethod]
+        public void Build_ParenthesesFormat_MultipleLines_WrapsRangeWithoutText()
+        {
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 15, "ignored", CodeReferenceFormat.Parentheses);
+
+            Assert.AreEqual(@"D:\Project\Test.cs(12-15)", actual);
+        }
+
+        [TestMethod]
+        public void Build_GitHubFormat_SingleLine_UsesHashLineAndAppendsText()
+        {
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;", CodeReferenceFormat.GitHub);
+
+            Assert.AreEqual(@"D:\Project\Test.cs#L12 var a = 1;", actual);
+        }
+
+        [TestMethod]
+        public void Build_GitHubFormat_MultipleLines_UsesHashLineRangeWithoutText()
+        {
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 15, "ignored", CodeReferenceFormat.GitHub);
+
+            Assert.AreEqual(@"D:\Project\Test.cs#L12-L15", actual);
+        }
+
+        [TestMethod]
+        public void Build_UnknownFormat_ThrowsArgumentOutOfRange()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 1, "x", (CodeReferenceFormat)99));
+        }
     }
 }
