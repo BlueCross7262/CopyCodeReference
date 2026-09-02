@@ -8,7 +8,7 @@ Visual Studio Marketplace 등록 화면에 그대로 붙여 넣을 값과, 사�
 | --- | --- |
 | Internal Name | `CopyCodeReference` |
 | Display Name | `Copy Code Reference` |
-| Version | `0.1.2` |
+| Version | `0.1.3` |
 | VSIX ID | `CopyCodeReference.8ac855e5-611b-4f49-b75f-8519d132f8b6` |
 | Publisher | `cy.ryu` |
 | Type | Tools |
@@ -64,3 +64,4 @@ Marketplace 상세 페이지에 최소 2장이 필요하다. Visual Studio 가 �
 - Experimental Instance 실행 테스트 (`F5`)
 - Release VSIX 직접 설치 테스트 (`bin\Release\CopyCodeReference.vsix` 실행)
 - 에디터 우클릭 메뉴에 두 명령이 실제로 표시되는지 확인. 이 머신에서는 VSCT 컴파일과 상수 대조까지만 검증했고, 메뉴가 화면에 뜨는 것은 확인하지 못했다.
+- `Tools` → `Options` → `Copy Code Reference` → `General` 페이지가 열리고 라디오 버튼 3개가 보이는지, 선택을 바꾼 뒤 `OK` 를 누르면 복사 결과 서식이 바뀌는지 확인. 이 머신에서는 pkgdef 의 `ToolsOptionsPages` 등록과 빌더 단위 테스트까지만 검증했다.

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.3
+
+### Added
+
+- Options page under `Tools` > `Options` > `Copy Code Reference` > `General` with radio buttons that select the location format: `Foo.cs:12` (colon, default), `Foo.cs(12)` (parentheses) or `Foo.cs#L12` (GitHub). Multi-line selections follow the same choice: `Foo.cs:12-15`, `Foo.cs(12-15)` or `Foo.cs#L12-L15`.
+- The setting is stored in the Visual Studio settings store and is included in settings import and export.
+
+### Changed
+
+- Both commands read the selected format at run time. The default output is unchanged from earlier versions.
+
 ## 0.1.2
 
 ### Fixed
