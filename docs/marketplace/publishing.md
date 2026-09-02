@@ -64,4 +64,5 @@ Marketplace 상세 페이지에 최소 2장이 필요하다. Visual Studio 가 �
 - Experimental Instance 실행 테스트 (`F5`)
 - Release VSIX 직접 설치 테스트 (`bin\Release\CopyCodeReference.vsix` 실행)
 - 에디터 우클릭 메뉴에 두 명령이 실제로 표시되는지 확인. 이 머신에서는 VSCT 컴파일과 상수 대조까지만 검증했고, 메뉴가 화면에 뜨는 것은 확인하지 못했다.
-- `Tools` → `Options` → `Copy Code Reference` → `General` 페이지가 열리고 라디오 버튼 3개가 보이는지, 선택을 바꾼 뒤 `OK` 를 누르면 복사 결과 서식이 바뀌는지 확인. 이 머신에서는 pkgdef 의 `ToolsOptionsPages` 등록과 빌더 단위 테스트까지만 검증했다.
+- `Tools` → `Options` → `Copy Code Reference` → `General` 페이지가 열리고 네 항목 (위치 서식 라디오 3개, 경로 구분자 체크박스, 여러 줄 라디오 3개, 캐럿 줄 체크박스) 이 다 보이는지, 선택을 바꾼 뒤 `OK` 를 누르면 복사 결과가 바뀌는지, VS 재시작 후에도 유지되는지 확인. 이 머신에서는 pkgdef 의 `ToolsOptionsPages` 등록과 빌더 단위 테스트까지만 검증했다.
+- 선택 영역 없이 명령을 실행했을 때 캐럿 줄이 복사되는지 확인 (옵션 on). 가상 공백만 덮은 선택에서도 같게 동작하는지 함께 확인. executor 경로라 이 머신에서 단위 테스트로 못 잡는다.

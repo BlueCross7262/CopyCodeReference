@@ -16,8 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\Services\CodeFenceLanguage.cs" Link="Services\CodeFenceLanguage.cs" />
     <Compile Include="..\..\Services\CodeReferenceBuilder.cs" Link="Services\CodeReferenceBuilder.cs" />
     <Compile Include="..\..\Services\CodeReferenceFormat.cs" Link="Services\CodeReferenceFormat.cs" />
+    <Compile Include="..\..\Services\CodeReferenceOptions.cs" Link="Services\CodeReferenceOptions.cs" />
+    <Compile Include="..\..\Services\MultiLineBody.cs" Link="Services\MultiLineBody.cs" />
     <Compile Include="..\..\Services\LineRangeCalculator.cs" Link="Services\LineRangeCalculator.cs" />
     <Compile Include="..\..\Services\RelativePathResolver.cs" Link="Services\RelativePathResolver.cs" />
   </ItemGroup>

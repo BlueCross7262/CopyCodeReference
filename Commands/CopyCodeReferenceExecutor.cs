@@ -26,20 +26,6 @@ namespace CopyCodeReference
                     return;
                 }
 
-                ITextSelection selection = textView.Selection;
-
-                if (selection == null || selection.IsEmpty)
-                {
-                    return;
-                }
-
-                SnapshotSpan span = selection.StreamSelectionSpan.SnapshotSpan;
-
-                if (span.IsEmpty)
-                {
-                    return;
-                }
-
                 string filePath = TryGetFilePath(textView.TextBuffer);
 
                 if (filePath == null)
@@ -47,28 +33,38 @@ namespace CopyCodeReference
                     return;
                 }
 
-                ITextSnapshot snapshot = span.Snapshot;
+                General options = await General.GetLiveInstanceAsync();
 
-                LineRange range = LineRangeCalculator.Calculate(
-                    span.Start.Position,
-                    span.Length,
-                    snapshot.Length,
-                    position => snapshot.GetLineNumberFromPosition(position));
+                LineRange range;
+                string selectedText;
 
-                string selectedText = span.GetText();
+                if (!TryGetSelectedLines(textView, out range, out selectedText))
+                {
+                    if (!options.CopyCaretLineWhenNoSelection)
+                    {
+                        return;
+                    }
+
+                    GetCaretLine(textView, out range, out selectedText);
+                }
 
                 string displayPath = useSolutionRelativePath
                     ? await ResolveSolutionRelativePathAsync(filePath)
                     : filePath;
 
-                General options = await General.GetLiveInstanceAsync();
+                CodeReferenceOptions referenceOptions = new CodeReferenceOptions
+                {
+                    Format = options.Format,
+                    UseForwardSlash = options.UseForwardSlash,
+                    MultiLineBody = options.MultiLineBody
+                };
 
                 string reference = CodeReferenceBuilder.Build(
                     displayPath,
                     range.StartLine,
                     range.EndLine,
                     selectedText,
-                    options.Format);
+                    referenceOptions);
 
                 if (await TrySetClipboardTextAsync(reference))
                 {
@@ -79,6 +75,46 @@ namespace CopyCodeReference
             {
                 await ex.LogAsync();
             }
+        }
+
+        private static bool TryGetSelectedLines(IWpfTextView textView, out LineRange range, out string selectedText)
+        {
+            range = default(LineRange);
+            selectedText = null;
+
+            ITextSelection selection = textView.Selection;
+
+            if (selection == null || selection.IsEmpty)
+            {
+                return false;
+            }
+
+            SnapshotSpan span = selection.StreamSelectionSpan.SnapshotSpan;
+
+            if (span.IsEmpty)
+            {
+                return false;
+            }
+
+            ITextSnapshot snapshot = span.Snapshot;
+
+            range = LineRangeCalculator.Calculate(
+                span.Start.Position,
+                span.Length,
+                snapshot.Length,
+                position => snapshot.GetLineNumberFromPosition(position));
+
+            selectedText = span.GetText();
+            return true;
+        }
+
+        private static void GetCaretLine(IWpfTextView textView, out LineRange range, out string selectedText)
+        {
+            ITextSnapshotLine line = textView.Caret.Position.BufferPosition.GetContainingLine();
+            int lineNumber = line.LineNumber + 1;
+
+            range = new LineRange(lineNumber, lineNumber);
+            selectedText = line.GetText();
         }
 
         private static async Task<string> ResolveSolutionRelativePathAsync(string filePath)

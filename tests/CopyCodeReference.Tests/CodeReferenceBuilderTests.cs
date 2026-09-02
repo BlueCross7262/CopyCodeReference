@@ -187,5 +187,192 @@ namespace CopyCodeReference.Tests
             Assert.ThrowsException<ArgumentOutOfRangeException>(
                 () => CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 1, "x", (CodeReferenceFormat)99));
         }
+
+        [TestMethod]
+        public void Build_OptionsOverload_WithDefaults_MatchesLegacyOverload()
+        {
+            string expected = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;");
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;", new CodeReferenceOptions());
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Build_NullOptions_Throws()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () => CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 1, "x", (CodeReferenceOptions)null));
+        }
+
+        [TestMethod]
+        public void Build_ForwardSlash_SingleLine_ConvertsPathSeparators()
+        {
+            var options = new CodeReferenceOptions { UseForwardSlash = true };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;", options);
+
+            Assert.AreEqual("D:/Project/Test.cs:12 var a = 1;", actual);
+        }
+
+        [TestMethod]
+        public void Build_ForwardSlash_MultipleLines_ConvertsPathSeparators()
+        {
+            var options = new CodeReferenceOptions { UseForwardSlash = true };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 15, "ignored", options);
+
+            Assert.AreEqual("D:/Project/Test.cs:12-15", actual);
+        }
+
+        [TestMethod]
+        public void Build_ForwardSlash_GitHubFormat_ProducesGitHubStyleReference()
+        {
+            var options = new CodeReferenceOptions
+            {
+                Format = CodeReferenceFormat.GitHub,
+                UseForwardSlash = true
+            };
+
+            string actual = CodeReferenceBuilder.Build(@"ViewModels\MainViewModel.cs", 12, 15, "ignored", options);
+
+            Assert.AreEqual("ViewModels/MainViewModel.cs#L12-L15", actual);
+        }
+
+        [TestMethod]
+        public void Build_ForwardSlash_DoesNotTouchSelectedText()
+        {
+            var options = new CodeReferenceOptions { UseForwardSlash = true };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, @"var path = @""C:\Temp\a.txt"";", options);
+
+            Assert.AreEqual(@"D:/Project/Test.cs:12 var path = @""C:\Temp\a.txt"";", actual);
+        }
+
+        [TestMethod]
+        public void Build_ForwardSlash_UncPath_KeepsBothLeadingSeparators()
+        {
+            var options = new CodeReferenceOptions { UseForwardSlash = true };
+
+            string actual = CodeReferenceBuilder.Build(@"\\server\share\Test.cs", 3, 3, "x", options);
+
+            Assert.AreEqual("//server/share/Test.cs:3 x", actual);
+        }
+
+        [TestMethod]
+        public void Build_ForwardSlashDisabled_KeepsBackslashes()
+        {
+            var options = new CodeReferenceOptions { UseForwardSlash = false };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;", options);
+
+            Assert.AreEqual(@"D:\Project\Test.cs:12 var a = 1;", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineCode_AppendsSelectedTextOnNextLine()
+        {
+            var options = new CodeReferenceOptions { MultiLineBody = MultiLineBody.Code };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 13, "var a = 1;\r\nvar b = 2;", options);
+
+            Assert.AreEqual("D:\\Project\\Test.cs:12-13\r\nvar a = 1;\r\nvar b = 2;", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineCode_TrimsTrailingNewLine()
+        {
+            var options = new CodeReferenceOptions { MultiLineBody = MultiLineBody.Code };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 13, "var a = 1;\r\nvar b = 2;\r\n", options);
+
+            Assert.AreEqual("D:\\Project\\Test.cs:12-13\r\nvar a = 1;\r\nvar b = 2;", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineCode_PreservesInnerIndentation()
+        {
+            var options = new CodeReferenceOptions { MultiLineBody = MultiLineBody.Code };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 2, "    var a = 1;\r\n\tvar b = 2;", options);
+
+            Assert.AreEqual("D:\\Project\\Test.cs:1-2\r\n    var a = 1;\r\n\tvar b = 2;", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineFencedCode_WrapsBodyWithLanguageTag()
+        {
+            var options = new CodeReferenceOptions { MultiLineBody = MultiLineBody.FencedCode };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 13, "var a = 1;\r\nvar b = 2;", options);
+
+            Assert.AreEqual("D:\\Project\\Test.cs:12-13\r\n```csharp\r\nvar a = 1;\r\nvar b = 2;\r\n```", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineFencedCode_UnknownExtension_UsesBareFence()
+        {
+            var options = new CodeReferenceOptions { MultiLineBody = MultiLineBody.FencedCode };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\notes.zzz", 1, 2, "alpha\r\nbeta", options);
+
+            Assert.AreEqual("D:\\Project\\notes.zzz:1-2\r\n```\r\nalpha\r\nbeta\r\n```", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineFencedCode_BodyContainingFence_UsesLongerFence()
+        {
+            var options = new CodeReferenceOptions { MultiLineBody = MultiLineBody.FencedCode };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\notes.md", 1, 3, "```\r\ncode\r\n```", options);
+
+            Assert.AreEqual("D:\\Project\\notes.md:1-3\r\n````markdown\r\n```\r\ncode\r\n```\r\n````", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineFencedCode_TrimsTrailingNewLineBeforeClosingFence()
+        {
+            var options = new CodeReferenceOptions { MultiLineBody = MultiLineBody.FencedCode };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 2, "var a = 1;\r\nvar b = 2;\r\n", options);
+
+            Assert.AreEqual("D:\\Project\\Test.cs:1-2\r\n```csharp\r\nvar a = 1;\r\nvar b = 2;\r\n```", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineCode_ForwardSlash_DoesNotTouchBodyBackslashes()
+        {
+            var options = new CodeReferenceOptions
+            {
+                UseForwardSlash = true,
+                MultiLineBody = MultiLineBody.Code
+            };
+
+            string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 2, "var a = 1;\r\nvar p = @\"C:\\Temp\";", options);
+
+            Assert.AreEqual("D:/Project/Test.cs:1-2\r\nvar a = 1;\r\nvar p = @\"C:\\Temp\";", actual);
+        }
+
+        [TestMethod]
+        public void Build_MultiLineBody_DoesNotChangeSingleLineOutput()
+        {
+            foreach (MultiLineBody body in new[] { MultiLineBody.LocationOnly, MultiLineBody.Code, MultiLineBody.FencedCode })
+            {
+                var options = new CodeReferenceOptions { MultiLineBody = body };
+
+                string actual = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 12, 12, "var a = 1;", options);
+
+                Assert.AreEqual(@"D:\Project\Test.cs:12 var a = 1;", actual, body.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Build_UnknownMultiLineBody_ThrowsArgumentOutOfRange()
+        {
+            var options = new CodeReferenceOptions { MultiLineBody = (MultiLineBody)99 };
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 2, "x", options));
+        }
     }
 }

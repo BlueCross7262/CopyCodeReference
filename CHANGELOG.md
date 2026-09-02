@@ -5,11 +5,14 @@
 ### Added
 
 - Options page under `Tools` > `Options` > `Copy Code Reference` > `General` with radio buttons that select the location format: `Foo.cs:12` (colon, default), `Foo.cs(12)` (parentheses) or `Foo.cs#L12` (GitHub). Multi-line selections follow the same choice: `Foo.cs:12-15`, `Foo.cs(12-15)` or `Foo.cs#L12-L15`.
-- The setting is stored in the Visual Studio settings store and is included in settings import and export.
+- Path separator option that writes paths with `/` instead of `\`, which suits GitHub and Markdown. The selected text is never rewritten.
+- Multi-line selection option that copies the selected code below the location line, either as plain text or inside a Markdown fence. The fence language comes from the file extension, and the fence grows longer than any backtick run inside the code so that fenced content survives.
+- Option to copy the caret line when nothing is selected. It also applies when a selection covers virtual space only. It is off by default, so the commands still do nothing on an empty selection unless it is turned on.
+- The settings are stored in the Visual Studio settings store and are included in settings import and export.
 
 ### Changed
 
-- Both commands read the selected format at run time. The default output is unchanged from earlier versions.
+- Both commands read the settings at run time. Every default matches the earlier behaviour, so the output is unchanged until a setting is changed.
 
 ## 0.1.2
 

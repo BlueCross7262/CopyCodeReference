@@ -52,8 +52,11 @@
     <Compile Include="Options\General.cs" />
     <Compile Include="Options\GeneralOptionsControl.cs" />
     <Compile Include="Options\GeneralOptionsPage.cs" />
+    <Compile Include="Services\CodeFenceLanguage.cs" />
     <Compile Include="Services\CodeReferenceBuilder.cs" />
     <Compile Include="Services\CodeReferenceFormat.cs" />
+    <Compile Include="Services\CodeReferenceOptions.cs" />
+    <Compile Include="Services\MultiLineBody.cs" />
     <Compile Include="Services\LineRangeCalculator.cs" />
     <Compile Include="Services\RelativePathResolver.cs" />
     <Compile Include="CopyCodeReferencePackage.cs" />

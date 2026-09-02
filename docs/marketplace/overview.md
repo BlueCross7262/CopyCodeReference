@@ -10,6 +10,7 @@ Useful when you paste a snippet into a code review, an issue, a chat message, or
 - Offers two commands, one for the absolute path and one for the solution-relative path
 - Available from the editor right-click menu and from the Edit menu
 - Lets you pick the location format on an options page: `Foo.cs:12`, `Foo.cs(12)` or `Foo.cs#L12`
+- Optionally writes paths with forward slashes, copies the code of a multi-line selection, or copies the caret line when nothing is selected
 - Appends the selected text for single-line selections
 - Copies the line range only for multi-line selections
 - Preserves the selected text exactly, including indentation, tabs, CRLF and trailing whitespace
@@ -44,7 +45,9 @@ No keyboard shortcut is assigned by default. Assign one under `Tools` then `Opti
 
 ## Options
 
-Open `Tools` then `Options` then `Copy Code Reference` then `General` and pick the location format with a radio button. Both commands follow the same setting.
+Open `Tools` then `Options` then `Copy Code Reference` then `General`. Both commands follow the same settings, and every default matches the behaviour of earlier versions. The settings are stored in the Visual Studio settings store and travel with settings import and export.
+
+Location format:
 
 | Format | Single line | Several lines |
 | --- | --- | --- |
@@ -52,13 +55,19 @@ Open `Tools` then `Options` then `Copy Code Reference` then `General` and pick t
 | Parentheses | `Foo.cs(12)` | `Foo.cs(12-15)` |
 | GitHub | `Foo.cs#L12` | `Foo.cs#L12-L15` |
 
-The selected text is still appended after a single space for single-line selections, whatever the format. The setting is stored in the Visual Studio settings store and travels with settings import and export.
+The selected text is still appended after a single space for single-line selections, whatever the format.
+
+Other settings:
+
+- Write paths with `/` instead of `\`, which suits GitHub and Markdown. The selected text is never rewritten.
+- Copy the selected code below the location line for multi-line selections, either as plain text or inside a Markdown fence. The fence language comes from the file extension, and the fence grows longer than any backtick run inside the code.
+- Copy the caret line when nothing is selected. Off by default.
 
 ## When the command does nothing
 
 The command exits quietly and leaves the clipboard unchanged in these cases:
 
-- No text is selected. The current caret line is not copied automatically.
+- No text is selected and the caret line option is off. The caret line is not copied automatically by default.
 - The active window is not a text editor, for example a designer, a resource editor or a tool window.
 - The document has no file path on disk, for example an unsaved new file.
 - The clipboard could not be opened because another process is holding it.
@@ -77,6 +86,7 @@ Copy Code Reference does not collect telemetry and does not transmit source code
 - Box and column selections are not specially handled. They do not crash, but the copied range is derived from the equivalent stream selection.
 - Multi-caret selections use the first stream selection only.
 - The location format is limited to the three choices on the options page. Free-form format strings are not supported.
+- The fence language is derived from a fixed extension table. Files outside that table are fenced without a language tag.
 - The relative path is resolved against the directory that holds the solution file. When no solution is open, or when the file sits outside that directory, the absolute path is used instead.
 
 ## Source code

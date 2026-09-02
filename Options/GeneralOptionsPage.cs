@@ -44,6 +44,9 @@ namespace CopyCodeReference
         public override void ResetSettings()
         {
             General.Instance.Format = CodeReferenceFormat.Colon;
+            General.Instance.UseForwardSlash = false;
+            General.Instance.MultiLineBody = MultiLineBody.LocationOnly;
+            General.Instance.CopyCaretLineWhenNoSelection = false;
             PushModelToControl();
         }
 
@@ -58,6 +61,9 @@ namespace CopyCodeReference
             if (_control != null)
             {
                 _control.Format = General.Instance.Format;
+                _control.UseForwardSlash = General.Instance.UseForwardSlash;
+                _control.MultiLineBody = General.Instance.MultiLineBody;
+                _control.CopyCaretLineWhenNoSelection = General.Instance.CopyCaretLineWhenNoSelection;
             }
         }
 
@@ -66,6 +72,9 @@ namespace CopyCodeReference
             if (_control != null)
             {
                 General.Instance.Format = _control.Format;
+                General.Instance.UseForwardSlash = _control.UseForwardSlash;
+                General.Instance.MultiLineBody = _control.MultiLineBody;
+                General.Instance.CopyCaretLineWhenNoSelection = _control.CopyCaretLineWhenNoSelection;
             }
         }
     }
