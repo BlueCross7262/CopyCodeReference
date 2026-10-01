@@ -374,5 +374,64 @@ namespace CopyCodeReference.Tests
             Assert.ThrowsException<ArgumentOutOfRangeException>(
                 () => CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 1, 2, "x", options));
         }
+
+        [TestMethod]
+        public void BuildLocation_DefaultOptions_ReturnsColonLocationWithoutText()
+        {
+            string actual = CodeReferenceBuilder.BuildLocation(@"D:\Project\Test.cs", 12, new CodeReferenceOptions());
+
+            Assert.AreEqual(@"D:\Project\Test.cs:12", actual);
+        }
+
+        [TestMethod]
+        public void BuildLocation_ParenthesesFormat_WrapsLine()
+        {
+            string actual = CodeReferenceBuilder.BuildLocation(
+                @"D:\Project\Test.cs",
+                12,
+                new CodeReferenceOptions { Format = CodeReferenceFormat.Parentheses });
+
+            Assert.AreEqual(@"D:\Project\Test.cs(12)", actual);
+        }
+
+        [TestMethod]
+        public void BuildLocation_GitHubFormat_UsesHashLine()
+        {
+            string actual = CodeReferenceBuilder.BuildLocation(
+                @"D:\Project\Test.cs",
+                12,
+                new CodeReferenceOptions { Format = CodeReferenceFormat.GitHub });
+
+            Assert.AreEqual(@"D:\Project\Test.cs#L12", actual);
+        }
+
+        [TestMethod]
+        public void BuildLocation_ForwardSlash_ConvertsPathSeparators()
+        {
+            string actual = CodeReferenceBuilder.BuildLocation(
+                @"ViewModels\MainViewModel.cs",
+                42,
+                new CodeReferenceOptions { UseForwardSlash = true });
+
+            Assert.AreEqual("ViewModels/MainViewModel.cs:42", actual);
+        }
+
+        [TestMethod]
+        public void BuildLocation_MatchesSingleLineBuildPrefix()
+        {
+            CodeReferenceOptions options = new CodeReferenceOptions { Format = CodeReferenceFormat.GitHub, UseForwardSlash = true };
+
+            string location = CodeReferenceBuilder.BuildLocation(@"D:\Project\Test.cs", 7, options);
+            string full = CodeReferenceBuilder.Build(@"D:\Project\Test.cs", 7, 7, "x", options);
+
+            Assert.AreEqual(location + " x", full);
+        }
+
+        [TestMethod]
+        public void BuildLocation_NullOptions_Throws()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () => CodeReferenceBuilder.BuildLocation(@"D:\Project\Test.cs", 1, null));
+        }
     }
 }

@@ -41,7 +41,7 @@ Visual Studio 2022 확장이다. 코드 편집기에서 선택한 코드를 파�
 
 ## 옵션 설정
 
-`Tools` → `Options` → `Copy Code Reference` → `General` 에서 설정한다. 두 명령 모두 같은 설정을 따른다. 기본값은 전부 아래 표의 첫 줄이며, 옵션을 건드리지 않으면 출력은 이전 버전과 같다. 설정은 Visual Studio 설정 저장소에 보관되고 설정 가져오기·내보내기에 포함된다.
+`Tools` → `Options` → `Copy Code Reference` → `General` 에서 설정한다. 두 명령 모두 같은 설정을 따른다. 기본값은 전부 아래 표의 첫 줄이며, 옵션을 건드리지 않으면 선택이 있을 때의 출력은 이전 버전과 같다. 선택이 없을 때의 기본 동작은 0.1.3 에서 바뀌었다 (아래 `선택이 없을 때` 절). 설정은 Visual Studio 설정 저장소에 보관되고 설정 가져오기·내보내기에 포함된다.
 
 ### 위치 표기 서식
 
@@ -76,7 +76,13 @@ ViewModels/MainViewModel.cs#L42-L46
 
 ### 선택이 없을 때
 
-`Copy the caret line when nothing is selected` 를 켜면 선택 영역이 없을 때 캐럿이 있는 줄을 한 줄 선택처럼 복사한다. 가상 공백만 덮은 선택처럼 실제 문자 범위가 비어 있는 경우도 같게 처리한다. 꺼져 있으면 (기본값) 아무 일도 하지 않는다.
+선택 영역이 없으면 캐럿이 있는 줄의 위치만 복사한다. 위치 표기 서식과 경로 구분자 설정을 그대로 따른다. 가상 공백만 덮은 선택처럼 실제 문자 범위가 비어 있는 경우도 같게 처리한다.
+
+```text
+D:\Project\SampleApp\ViewModels\MainViewModel.cs:42
+```
+
+`Include the caret line text when nothing is selected` 를 켜면 위치 뒤에 공백 한 칸과 그 줄의 텍스트를 붙여 한 줄 선택처럼 복사한다. 기본값은 꺼짐이다.
 
 ## 출력 예
 
@@ -100,6 +106,7 @@ ViewModels\MainViewModel.cs:42 var data = await repository.LoadAsync();
 
 ## 동작 규칙
 
+- 선택이 없으면 캐럿 줄의 `경로:줄번호` 만 복사한다.
 - 선택한 코드 텍스트는 한 줄 선택일 때만 포함한다. 여러 줄을 선택하면 기본값에서는 `경로:시작-끝` 한 줄만 복사한다. 옵션에서 여러 줄 코드 포함을 켜면 코드도 함께 복사한다.
 - 한 줄 선택의 구분자는 공백 정확히 한 칸이다.
 - 경로 형태는 실행한 명령이 정한다. 절대 경로 명령과 솔루션 상대 경로 명령이 따로 있다.
@@ -113,10 +120,8 @@ ViewModels\MainViewModel.cs:42 var data = await repository.LoadAsync();
 
 아래 상황에서는 클립보드를 건드리지 않고 조용히 종료한다. 예외를 던지지 않는다.
 
-- 선택 영역이 없다. 옵션에서 캐럿 줄 복사를 켜지 않았다면 캐럿이 있는 줄을 자동으로 복사하지 않는다.
 - 활성 문서나 텍스트 뷰를 얻을 수 없다. 디자이너, XAML 디자이너, 리소스 편집기, 도구 창 등이 활성인 경우다.
 - 문서에 실제 파일 경로가 없다. 저장하지 않은 새 파일, 임시 문서가 여기 해당한다.
-- 선택 영역이 가상 공백만 덮고 있어 실제 문자 범위가 비어 있다. 캐럿 줄 복사 옵션을 켰다면 이 경우에도 캐럿 줄을 복사한다.
 - 클립보드 접근이 실패했다. 다른 프로세스가 클립보드를 점유한 경우이며, 짧게 재시도한 뒤 포기한다.
 
 ## 빌드 방법
@@ -144,7 +149,7 @@ Experimental Instance 는 평소 쓰는 Visual Studio 설정과 분리된 별도
 `tests\CopyCodeReference.Tests` 프로젝트가 Visual Studio SDK 에 의존하지 않는 순수 로직을 검증한다.
 
 - `RelativePathResolver` 의 솔루션 상대 경로 변환. 하위 폴더, 접두사 겹침 오탐, 다른 드라이브, UNC, 한글 경로, 대소문자 차이.
-- `CodeReferenceBuilder` 의 출력 형식. 단일 줄 공백 구분자, 여러 줄 위치 전용, 빈 문자열, 들여쓰기 유지, 탭 유지, CRLF 유지, 한글 경로, Unicode 텍스트, Colon·Parentheses·GitHub 서식별 단일 줄과 범위 출력, 경로 구분자 변환과 UNC 경로, 여러 줄 코드·코드 펜스 출력, 펜스 충돌 시 펜스 확장, 정의되지 않은 서식 값 예외.
+- `CodeReferenceBuilder` 의 출력 형식. 단일 줄 공백 구분자, 여러 줄 위치 전용, 빈 문자열, 들여쓰기 유지, 탭 유지, CRLF 유지, 한글 경로, Unicode 텍스트, Colon·Parentheses·GitHub 서식별 단일 줄과 범위 출력, 경로 구분자 변환과 UNC 경로, 여러 줄 코드·코드 펜스 출력, 펜스 충돌 시 펜스 확장, 정의되지 않은 서식 값 예외, 선택이 없을 때 쓰는 위치 전용 출력.
 - `CodeFenceLanguage` 의 확장자 대 언어 태그 매핑. 대소문자 무시, 확장자 없음, 알 수 없는 확장자, 잘못된 경로 문자.
 - `LineRangeCalculator` 의 줄 범위 계산. exclusive end 처리, 파일 마지막 줄, 끝 개행, 경계 클램프.
 

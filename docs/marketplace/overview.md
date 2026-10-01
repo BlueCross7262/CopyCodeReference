@@ -10,12 +10,12 @@ Useful when you paste a snippet into a code review, an issue, a chat message, or
 - Offers two commands, one for the absolute path and one for the solution-relative path
 - Available from the editor right-click menu and from the Edit menu
 - Lets you pick the location format on an options page: `Foo.cs:12`, `Foo.cs(12)` or `Foo.cs#L12`
-- Optionally writes paths with forward slashes, copies the code of a multi-line selection, or copies the caret line when nothing is selected
+- Optionally writes paths with forward slashes, copies the code of a multi-line selection, or appends the caret line text when nothing is selected
 - Appends the selected text for single-line selections
 - Copies the line range only for multi-line selections
 - Preserves the selected text exactly, including indentation, tabs, CRLF and trailing whitespace
 - Silent on success, with a short status bar message instead of a popup
-- Does nothing and leaves the clipboard untouched when there is no selection
+- Copies the caret line location, such as `Foo.cs:12`, when there is no selection
 
 ## Example
 
@@ -45,7 +45,7 @@ No keyboard shortcut is assigned by default. Assign one under `Tools` then `Opti
 
 ## Options
 
-Open `Tools` then `Options` then `Copy Code Reference` then `General`. Both commands follow the same settings, and every default matches the behaviour of earlier versions. The settings are stored in the Visual Studio settings store and travel with settings import and export.
+Open `Tools` then `Options` then `Copy Code Reference` then `General`. Both commands follow the same settings. With a selection, every default matches the behaviour of earlier versions. The settings are stored in the Visual Studio settings store and travel with settings import and export.
 
 Location format:
 
@@ -61,13 +61,12 @@ Other settings:
 
 - Write paths with `/` instead of `\`, which suits GitHub and Markdown. The selected text is never rewritten.
 - Copy the selected code below the location line for multi-line selections, either as plain text or inside a Markdown fence. The fence language comes from the file extension, and the fence grows longer than any backtick run inside the code.
-- Copy the caret line when nothing is selected. Off by default.
+- Append the caret line text when nothing is selected. Off by default, so an empty selection copies the location only.
 
 ## When the command does nothing
 
 The command exits quietly and leaves the clipboard unchanged in these cases:
 
-- No text is selected and the caret line option is off. The caret line is not copied automatically by default.
 - The active window is not a text editor, for example a designer, a resource editor or a tool window.
 - The document has no file path on disk, for example an unsaved new file.
 - The clipboard could not be opened because another process is holding it.

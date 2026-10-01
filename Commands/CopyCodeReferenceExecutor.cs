@@ -37,15 +37,12 @@ namespace CopyCodeReference
 
                 LineRange range;
                 string selectedText;
+                bool locationOnly = false;
 
                 if (!TryGetSelectedLines(textView, out range, out selectedText))
                 {
-                    if (!options.CopyCaretLineWhenNoSelection)
-                    {
-                        return;
-                    }
-
                     GetCaretLine(textView, out range, out selectedText);
+                    locationOnly = !options.CopyCaretLineWhenNoSelection;
                 }
 
                 string displayPath = useSolutionRelativePath
@@ -59,12 +56,14 @@ namespace CopyCodeReference
                     MultiLineBody = options.MultiLineBody
                 };
 
-                string reference = CodeReferenceBuilder.Build(
-                    displayPath,
-                    range.StartLine,
-                    range.EndLine,
-                    selectedText,
-                    referenceOptions);
+                string reference = locationOnly
+                    ? CodeReferenceBuilder.BuildLocation(displayPath, range.StartLine, referenceOptions)
+                    : CodeReferenceBuilder.Build(
+                        displayPath,
+                        range.StartLine,
+                        range.EndLine,
+                        selectedText,
+                        referenceOptions);
 
                 if (await TrySetClipboardTextAsync(reference))
                 {

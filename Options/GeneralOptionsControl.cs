@@ -29,7 +29,7 @@ namespace CopyCodeReference
             _code = CreateRadioButton(MultiLineGroupName, "Location and the selected code");
             _fencedCode = CreateRadioButton(MultiLineGroupName, "Location and the selected code in a Markdown fence");
 
-            _caretLine = CreateCheckBox("Copy the caret line when nothing is selected");
+            _caretLine = CreateCheckBox("Include the caret line text when nothing is selected");
 
             StackPanel panel = new StackPanel
             {

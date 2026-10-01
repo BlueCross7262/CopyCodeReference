@@ -25,11 +25,7 @@ namespace CopyCodeReference
                 throw new ArgumentNullException(nameof(options));
             }
 
-            string displayPath = options.UseForwardSlash && filePath != null
-                ? filePath.Replace('\\', '/')
-                : filePath;
-
-            string location = BuildLocation(displayPath, startLine, endLine, options.Format);
+            string location = FormatLocation(ToDisplayPath(filePath, options), startLine, endLine, options.Format);
 
             if (startLine == endLine)
             {
@@ -39,7 +35,24 @@ namespace CopyCodeReference
             return BuildMultiLine(location, filePath, selectedText, options);
         }
 
-        private static string BuildLocation(string filePath, int startLine, int endLine, CodeReferenceFormat format)
+        public static string BuildLocation(string filePath, int line, CodeReferenceOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            return FormatLocation(ToDisplayPath(filePath, options), line, line, options.Format);
+        }
+
+        private static string ToDisplayPath(string filePath, CodeReferenceOptions options)
+        {
+            return options.UseForwardSlash && filePath != null
+                ? filePath.Replace('\\', '/')
+                : filePath;
+        }
+
+        private static string FormatLocation(string filePath, int startLine, int endLine, CodeReferenceFormat format)
         {
             bool isRange = startLine != endLine;
             switch (format)

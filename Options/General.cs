@@ -25,8 +25,8 @@ namespace CopyCodeReference
         public MultiLineBody MultiLineBody { get; set; } = MultiLineBody.LocationOnly;
 
         [Category("Copy Format")]
-        [DisplayName("Copy the caret line when nothing is selected")]
-        [Description("Copies the line that holds the caret when there is no selection. When this is off the command does nothing and leaves the clipboard untouched.")]
+        [DisplayName("Include the caret line text when nothing is selected")]
+        [Description("When there is no selection the command copies the location of the caret line, such as Foo.cs:12. Turn this on to append the text of that line after a single space.")]
         [DefaultValue(false)]
         public bool CopyCaretLineWhenNoSelection { get; set; }
     }
