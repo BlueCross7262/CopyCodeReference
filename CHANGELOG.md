@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Korean user interface. The options page and the status bar message follow the Visual Studio display language: Korean for Korean, English for every other language.
+- Live preview on the options page that shows what a single-line selection, a multi-line selection and an empty selection copy with the current settings.
+
+### Changed
+
+- Redesigned options page: format samples in a monospace column, a short note under each setting, and a two-column layout that stacks when the page is narrow.
+
 ## 0.1.3
 
 ### Added

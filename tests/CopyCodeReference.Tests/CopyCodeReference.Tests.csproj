@@ -23,6 +23,8 @@
     <Compile Include="..\..\Services\MultiLineBody.cs" Link="Services\MultiLineBody.cs" />
     <Compile Include="..\..\Services\LineRangeCalculator.cs" Link="Services\LineRangeCalculator.cs" />
     <Compile Include="..\..\Services\RelativePathResolver.cs" Link="Services\RelativePathResolver.cs" />
+    <Compile Include="..\..\Services\UiText.cs" Link="Services\UiText.cs" />
+    <Compile Include="..\..\Services\OptionsPreview.cs" Link="Services\OptionsPreview.cs" />
   </ItemGroup>
 
 </Project>

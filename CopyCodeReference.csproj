@@ -59,6 +59,8 @@
     <Compile Include="Services\MultiLineBody.cs" />
     <Compile Include="Services\LineRangeCalculator.cs" />
     <Compile Include="Services\RelativePathResolver.cs" />
+    <Compile Include="Services\UiText.cs" />
+    <Compile Include="Services\OptionsPreview.cs" />
     <Compile Include="CopyCodeReferencePackage.cs" />
     <Compile Include="source.extension.cs">
       <AutoGen>True</AutoGen>

@@ -203,9 +203,11 @@ namespace CopyCodeReference
         {
             string fileName = SafeGetFileName(displayPath);
 
-            return range.StartLine == range.EndLine
-                ? $"Copied {fileName}:{range.StartLine}"
-                : $"Copied {fileName}:{range.StartLine}-{range.EndLine}";
+            string location = range.StartLine == range.EndLine
+                ? $"{fileName}:{range.StartLine}"
+                : $"{fileName}:{range.StartLine}-{range.EndLine}";
+
+            return UiText.Current.CopiedStatus(location);
         }
 
         private static string SafeGetFileName(string displayPath)
