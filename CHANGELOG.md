@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+### Changed
+
+- Publisher name changed from `cy.ryu` to `cyryu` to match the Visual Studio Marketplace publisher. The extension ID and behaviour are unchanged.
+
 ## 0.1.4
 
 ### Added

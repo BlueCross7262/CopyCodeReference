@@ -8,9 +8,9 @@ Visual Studio Marketplace 등록 화면에 그대로 붙여 넣을 값과, 사�
 | --- | --- |
 | Internal Name | `CopyCodeReference` |
 | Display Name | `Copy Code Reference` |
-| Version | `0.1.4` |
+| Version | `0.1.5` |
 | VSIX ID | `CopyCodeReference.8ac855e5-611b-4f49-b75f-8519d132f8b6` |
-| Publisher | `cy.ryu` |
+| Publisher | `cyryu` |
 | Type | Tools |
 | Pricing | Free |
 | Visual Studio | 2022 |
@@ -22,6 +22,8 @@ Visual Studio Marketplace 등록 화면에 그대로 붙여 넣을 값과, 사�
 | Overview | `docs/marketplace/overview.md` 내용 |
 
 VSIX ID 와 Publisher 는 최초 공개 이후 변경하지 않는다. 자동 업데이트가 이 두 값으로 확장을 식별한다.
+
+vsixmanifest 의 `Publisher` 는 Marketplace publisher 의 display name 과 글자 그대로 같아야 한다. 다르면 업로드가 `Publisher display name (...) in Marketplace and Author name (...) in the extension need to be the same to publish the extension.` 오류로 거부된다. `source.extension.cs` 의 `Author` 상수도 같은 값으로 맞춘다.
 
 ## Short Description
 
